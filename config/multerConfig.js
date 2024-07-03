@@ -1,0 +1,18 @@
+
+const multer = require('multer');
+
+const fileStorage = multer.diskStorage({
+    destination: (req, file, callback) => {
+        callback(null, 'public/userFiles');
+    },
+    filename: (req, file, callback) => {
+        callback(null, Date.now() + "-" + file.originalname);
+    }
+});
+
+const upload = multer({ storage: fileStorage }).fields([
+    { name: 'logoFile', maxCount: 1 },
+    { name: 'imageFile', maxCount: 1 },
+]);
+
+module.exports = upload;
