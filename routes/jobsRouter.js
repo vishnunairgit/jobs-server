@@ -50,21 +50,22 @@
 const express = require('express');
 const router = express.Router();
 const jobController = require('../controllers/jobController');
+const { adminAuth } = require('../Middlewares/Authorization');
 
 // POST /api/jobs/Addjob
-router.post('/Addjob', jobController.Addjob);
+router.post('/Addjob', adminAuth, jobController.Addjob);
 
 // GET /api/jobs/getAllJobs
-router.get('/getAllJobs', jobController.getAllJobs);
+router.get('/getAllJobs', adminAuth, jobController.getAllJobs);
 
 // GET /api/jobs/getSingleJobs/:jobId
-router.get('/getSingleJobs/:jobId', jobController.getSingleJobs);
+router.get('/getSingleJobs/:jobId', adminAuth, jobController.getSingleJobs);
 
 // PUT /api/jobs/EditJob/:jobId
-router.put('/EditJob/:jobId', jobController.updateJob);
+router.put('/EditJob/:jobId', adminAuth, jobController.updateJob);
 
 // DELETE /api/jobs/DeleteJob/:jobId
-router.delete('/DeleteJob/:jobId', jobController.deleteJob);
+router.delete('/DeleteJob/:jobId',adminAuth,  jobController.deleteJob);
 
 module.exports = router;
 

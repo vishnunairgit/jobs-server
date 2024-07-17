@@ -7,8 +7,8 @@ const { adminAuth } = require('../Middlewares/Authorization');
 
 
 router.get('/Getuser', adminAuth,  userController.Getuser)
-router.put('/updateUser/:userId', upload,adminAuth, userController.updateUser)
-router.put('/updateUserPassword/:userId',adminAuth, userController.updateUserPassword)
+router.put('/updateUser/:userId', upload, adminAuth, userController.updateUser)
+router.put('/updateUserPassword/:userId', adminAuth, userController.updateUserPassword)
 
 
 

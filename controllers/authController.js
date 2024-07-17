@@ -91,39 +91,7 @@ const login = async (req, res) => {
 };
 
 
-// const login = async (req, res) => {
-//     try {
-//         const { UserName, password } = req.body;
 
-//         console.log('Attempting login for:', UserName);
-
-//         // Find user by UserName in the database
-//         const user = await USERS.findOne({ UserName });
-
-//         if (!user) {
-//             console.log('User not found:', UserName);
-//             return res.status(401).json({ message: 'Invalid User Name or password' });
-//         }
-
-//         // Compare hashed password with input password
-//         const isPasswordValid = await bcryptjs.compare(password, user.password);
-
-//         if (!isPasswordValid) {
-//             console.log('Password mismatch for user:', UserName);
-//             return res.status(401).json({ message: 'Invalid User Name or password' });
-//         }
-
-//         // Generate JWT token
-//         const token = jwt.sign({ userId: user._id, Role:user?.Role }, process.env.JWT_PASSWORD, { expiresIn: '1h' });
-
-//         // Return success message and token
-//         res.status(200).json({ message: 'Login successful', token });
-
-//     } catch (error) {
-//         console.error('Error during login:', error);
-//         res.status(500).json({ message: 'Internal Server Error' });
-//     }
-// }
 
 
 module.exports = { register, login };
