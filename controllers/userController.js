@@ -49,16 +49,17 @@ exports.updateUser = async (req, res) => {
     const userData = req.body;
 
     try {
-
         console.log("Received user data:", userData);
         console.log("Received files:", req.files);
         // handle file uploads
+        const { logoFile, imageFile} = req.files;
+
             if (req.files) {
-                if (req.files.logoFile && req.files.logoFile[0]) {
-                    userData.Logo = req.files.logoFile[0].path.replace(/\\/g, '/');
+                if (logoFile && logoFile[0]) {
+                    userData.Logo = logoFile[0].filename;
                 }
-                if (req.files.imageFile && req.files.imageFile[0]) {
-                    userData.Image = req.files.imageFile[0].path.replace(/\\/g, '/');
+                if (imageFile && imageFile[0]) {
+                    userData.Image = imageFile[0].filename;
                 }
             }
     

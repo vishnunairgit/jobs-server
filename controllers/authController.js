@@ -79,7 +79,7 @@ const login = async (req, res) => {
         }
 
         // Generate JWT token
-        const token = jwt.sign({ userId: user._id, Role:user?.Role }, process.env.JWT_PASSWORD, { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, Role:user?.Role }, process.env.JWT_PASSWORD, { expiresIn: '3h' });
 
         // Return success message and token
         res.status(200).json({ message: 'Login successful', token });
@@ -89,9 +89,6 @@ const login = async (req, res) => {
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
-
-
-
 
 
 module.exports = { register, login };
