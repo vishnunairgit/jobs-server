@@ -55,8 +55,13 @@ const { adminAuth } = require('../Middlewares/Authorization');
 // POST /api/jobs/Addjob
 router.post('/Addjob', adminAuth, jobController.Addjob);
 
-// GET /api/jobs/getAllJobs
-router.get('/getAllJobs', adminAuth, jobController.getAllJobs);
+// GET /api/jobs/getJobs
+router.get('/getJobs', adminAuth, jobController.getJobs);
+
+// GET /api/jobs/getAllJobs/ student
+
+router.get('/getAllJobs', jobController.getAllJobs);
+
 
 // GET /api/jobs/getSingleJobs/:jobId
 router.get('/getSingleJobs/:jobId', adminAuth, jobController.getSingleJobs);

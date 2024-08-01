@@ -3,7 +3,6 @@ const mongoose = require('mongoose');
 
 
 // Add Jobs
-
 exports.Addjob = async (req, res) => {
     try {
         const {
@@ -24,15 +23,11 @@ exports.Addjob = async (req, res) => {
     }
 };
 
-
-// Get All Jobs
-
-exports.getAllJobs = async (req, res) => {
-
+// Get Jobs
+exports.getJobs = async (req, res) => {
     const userId = req.headers.userid;
 
     console.log(userId, '-----------userId-------------');
-
     try {
 
         if (!userId) {
@@ -41,7 +36,7 @@ exports.getAllJobs = async (req, res) => {
 
         // console.log(userId,'-------userId----------');
 
-        const jobs = await JOBS.find({ CreatedBy: userId }).populate('CreatedBy', 'UserName Email');
+        const jobs = await JOBS.find({ CreatedBy: userId }).populate('CreatedBy', 'UserName Email Logo');
 
         console.log(jobs, '-------jooon-----');
 
@@ -54,12 +49,29 @@ exports.getAllJobs = async (req, res) => {
         console.log(error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
+};
 
+// Get All Jobs
+exports.getAllJobs = async (req, res) => {
+
+    try {
+        const jobs = await JOBS.find().populate('CreatedBy', 'UserName Email Logo');
+
+        console.log(jobs, '-------jooon-----');
+
+        if (!jobs || jobs.length === 0) {
+            return res.status(404).json({ error: 'Jobs not found' });
+        }
+        res.status(200).json(jobs)
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
 };
 
 
 // Get Single Job Data
-
 exports.getSingleJobs = async (req, res) => {
 
     const { jobId } = req.params;
@@ -99,7 +111,6 @@ exports.updateJob = async (req, res) => {
 }
 
 // Delete job
-
 exports.deleteJob = async (req, res) => {
 
     const { jobId } = req.params;
