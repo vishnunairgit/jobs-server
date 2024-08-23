@@ -43,10 +43,6 @@
 // module.exports = jobsRouter;
 
 
-
-
-
-
 const express = require('express');
 const router = express.Router();
 const jobController = require('../controllers/jobController');
@@ -56,21 +52,28 @@ const { adminAuth } = require('../Middlewares/Authorization');
 router.post('/Addjob', adminAuth, jobController.Addjob);
 
 // GET /api/jobs/getJobs
+// router.get('/getJobs', adminAuth, jobController.getJobs);
 router.get('/getJobs', adminAuth, jobController.getJobs);
 
-// GET /api/jobs/getAllJobs/ student
+
+
+// GET /api/jobs/getAllJobs/ studentz
 
 router.get('/getAllJobs', jobController.getAllJobs);
 
 
 // GET /api/jobs/getSingleJobs/:jobId
-router.get('/getSingleJobs/:jobId', adminAuth, jobController.getSingleJobs);
+router.get('/getSingleJob/:jobId', adminAuth, jobController.getSingleJob);
 
 // PUT /api/jobs/EditJob/:jobId
 router.put('/EditJob/:jobId', adminAuth, jobController.updateJob);
 
 // DELETE /api/jobs/DeleteJob/:jobId
 router.delete('/DeleteJob/:jobId',adminAuth,  jobController.deleteJob);
+
+router.post('./ApplyJob')
+
+
 
 module.exports = router;
 

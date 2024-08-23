@@ -1,5 +1,4 @@
 
-
 const multer = require('multer');
 
 const fileStorage = multer.diskStorage({
@@ -14,6 +13,10 @@ const fileStorage = multer.diskStorage({
 const upload = multer({ storage: fileStorage }).fields([
     { name: 'logoFile', maxCount: 1 },
     { name: 'imageFile', maxCount: 1 },
+    { name: 'resume', maxCount: 1 }
+
 ]);
 
 module.exports = upload;
+
+

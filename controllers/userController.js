@@ -26,23 +26,7 @@ exports.Getuser = async (req, res) => {
     }
 }
 
-// exports.updateUser = async (req, res) => {
-//     const userId = req.params.userId;
-//     const userData = req.body;
 
-//     try {
-//         const updateUser = await USER.findByIdAndUpdate(userId, userData, { new: true });
-//         if (!updateUser) {
-//             return res.status(400).json({ message: 'user not fount' })
-//         }
-//         res.status(200).json(updateUser)
-//         console.log(updateUser,'------------');
-
-//     } catch (error) {
-//         res.status(500).json({ message: 'Error updating user', error });
-
-//     }
-// }
 
 exports.updateUser = async (req, res) => {
     const userId = req.params.userId;

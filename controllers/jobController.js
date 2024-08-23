@@ -1,55 +1,104 @@
 const JOBS = require('../models/JobModels');
 const mongoose = require('mongoose');
+const io = require('../config/socket'); 
+
+
 
 
 // Add Jobs
+
+
+// exports.Addjob = async (req, res) => {
+//     try {
+//         const {
+//             CreatedBy, JobTitle, Experience, Location, Qualifications, EmploymentType, Openings, Date, Salary, status, Description, Keyskills,
+//         } = req.body;
+
+
+//         const newJob = new JOBS({
+//             CreatedBy, JobTitle, Experience, Location, Qualifications, EmploymentType, Openings, Date, Salary, status, Description, Keyskills,
+//         });
+
+//         await newJob.save();
+
+//         io.emit('NEW_JOB', newJob);
+    
+
+//         console.log('Notification emitted for new job:', newJob);
+
+
+
+//         res.status(201).json({ message: 'Job added successfully', job: newJob });
+
+//     } catch (error) {
+//         console.log(error);
+
+//  if (!res.headersSent) {
+//       res.status(500).json({ message: 'Internal Server Error' });
+//     }    }
+// };
+
+
 exports.Addjob = async (req, res) => {
     try {
         const {
             CreatedBy, JobTitle, Experience, Location, Qualifications, EmploymentType, Openings, Date, Salary, status, Description, Keyskills,
         } = req.body;
 
-        // console.log(req.body, '----job basic information----');
-
         const newJob = new JOBS({
             CreatedBy, JobTitle, Experience, Location, Qualifications, EmploymentType, Openings, Date, Salary, status, Description, Keyskills,
         });
 
         await newJob.save();
+
+        // Ensure io is accessible
+        if (global.io) {
+            global.io.emit('NEW_JOB', newJob);
+            console.log('Notification emitted for new job:', newJob);
+        } else {
+            console.log('Socket.io instance is not available.');
+        }
+
         res.status(201).json({ message: 'Job added successfully', job: newJob });
+
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: 'Internal Server Error' });
+        if (!res.headersSent) {
+            res.status(500).json({ message: 'Internal Server Error' });
+        }
     }
 };
 
-// Get Jobs
+
+
+
 exports.getJobs = async (req, res) => {
-    const userId = req.headers.userid;
+    const userId = req.query.userId; // Use query parameters for GET request
 
-    console.log(userId, '-----------userId-------------');
+    console.log(`Received userId: ${userId}`);
+
     try {
-
         if (!userId) {
             return res.status(400).json({ error: 'UserId is required' });
         }
 
-        // console.log(userId,'-------userId----------');
-
         const jobs = await JOBS.find({ CreatedBy: userId }).populate('CreatedBy', 'UserName Email Logo');
 
-        console.log(jobs, '-------jooon-----');
+        console.log(`Jobs found: ${jobs.length}`);
 
         if (!jobs || jobs.length === 0) {
-            return res.status(404).json({ error: 'Jobs not found' });
+            return res.status(404).json({ error: 'No jobs found for this user' });
         }
-        res.status(200).json(jobs)
 
+        res.status(200).json(jobs);
     } catch (error) {
-        console.log(error);
+        console.error('Error fetching jobs:', error);
         res.status(500).json({ message: 'Internal Server Error' });
     }
 };
+
+
+    
 
 // Get All Jobs
 exports.getAllJobs = async (req, res) => {
@@ -72,7 +121,7 @@ exports.getAllJobs = async (req, res) => {
 
 
 // Get Single Job Data
-exports.getSingleJobs = async (req, res) => {
+exports.getSingleJob = async (req, res) => {
 
     const { jobId } = req.params;
 

@@ -1,11 +1,12 @@
-var createError = require('http-errors');
-var express = require('express');
-var path = require('path');
-var cookieParser = require('cookie-parser');
-var logger = require('morgan');
-const connectToDatabase = require('./config/Db');
+const createError = require('http-errors');
+const express = require('express');
+const path = require('path');
+const cookieParser = require('cookie-parser');
+const logger = require('morgan');
 const cors = require('cors');
 const dotenv = require('dotenv').config();
+const connectToDatabase = require('./config/Db');
+
 
 // Error handling for dotenv configuration
 
@@ -14,45 +15,36 @@ if (dotenv.error) {
 }
 console.log(process.env.JWT_PASSWORD, "-----jwt password-----");
 
-// var indexRouter = require('./routes/index');
-
-// const usersRouter = require('./routes/UsersRouter');
+// Route imports
 const authRouter = require('./routes/authRouter'); 
 const jobsRouter = require('./routes/jobsRouter'); 
 const userRouter = require('./routes/userRouter');
+const studentRouter = require('./routes/studentRouter');
 
+const  app = express();
 
+// Database connection
 connectToDatabase()
 
-var app = express();
-
 app.use(cors());
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
-
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+
+// Static files
 app.use(express.static(path.join(__dirname, 'public')));
 
 
-
-
-// app.use('/', indexRouter);
-// app.use('/auth', authRouter);
-// app.use('/users', usersRouter);
-
-
+// Routes
 app.use(authRouter);
 app.use(jobsRouter);
 app.use(userRouter);
-
-
-
-// app.use('/auth', authRouter); // Mount authRouter under /auth
-// app.use('/api/jobs', jobsRouter); // Mount jobsRouter under /api/jobs
-
+app.use(studentRouter);
 
 
 
@@ -71,5 +63,8 @@ app.use(function(err, req, res, next) {
   res.status(err.status || 500);
   res.render('error');
 });
+
+// Initialize WebSocket server placeholder
+app.locals.wss = null;
 
 module.exports = app;
