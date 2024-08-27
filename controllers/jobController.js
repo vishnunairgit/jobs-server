@@ -1,42 +1,13 @@
 const JOBS = require('../models/JobModels');
 const mongoose = require('mongoose');
-const io = require('../config/socket'); 
+// const io = require('../config/socket');
+const Notification = require('../models/Notification')
+const STUDENT = require('../models/Student')
 
 
 
 
 // Add Jobs
-
-
-// exports.Addjob = async (req, res) => {
-//     try {
-//         const {
-//             CreatedBy, JobTitle, Experience, Location, Qualifications, EmploymentType, Openings, Date, Salary, status, Description, Keyskills,
-//         } = req.body;
-
-
-//         const newJob = new JOBS({
-//             CreatedBy, JobTitle, Experience, Location, Qualifications, EmploymentType, Openings, Date, Salary, status, Description, Keyskills,
-//         });
-
-//         await newJob.save();
-
-//         io.emit('NEW_JOB', newJob);
-    
-
-//         console.log('Notification emitted for new job:', newJob);
-
-
-
-//         res.status(201).json({ message: 'Job added successfully', job: newJob });
-
-//     } catch (error) {
-//         console.log(error);
-
-//  if (!res.headersSent) {
-//       res.status(500).json({ message: 'Internal Server Error' });
-//     }    }
-// };
 
 
 exports.Addjob = async (req, res) => {
@@ -45,29 +16,70 @@ exports.Addjob = async (req, res) => {
             CreatedBy, JobTitle, Experience, Location, Qualifications, EmploymentType, Openings, Date, Salary, status, Description, Keyskills,
         } = req.body;
 
+
         const newJob = new JOBS({
             CreatedBy, JobTitle, Experience, Location, Qualifications, EmploymentType, Openings, Date, Salary, status, Description, Keyskills,
         });
-
         await newJob.save();
 
-        // Ensure io is accessible
-        if (global.io) {
-            global.io.emit('NEW_JOB', newJob);
-            console.log('Notification emitted for new job:', newJob);
-        } else {
-            console.log('Socket.io instance is not available.');
-        }
+        // Generate a notification
+                // Fetch student user IDs
 
-        res.status(201).json({ message: 'Job added successfully', job: newJob });
+                const students = await STUDENT.find({Role:"2"});
+                const studentUserIds = students.map(students=>students._id)
+
+                const notification = new Notification({
+                    title: 'New Job Posted',
+                    message: `A new job has been posted: ${newJob.JobTitle}`,
+                    student: studentUserIds, // Assuming you have a way to identify students
+                    // date: '2024-08-27T00:00:00Z',  // Hardcoded date for testing
+                    Date: new global.Date(),  // Use global.Date if necessary
+
+                });
+        
+                await notification.save();
+
+                res.status(201).json({ message: 'Job added and notification sent successfully', job: newJob });
 
     } catch (error) {
         console.log(error);
+
         if (!res.headersSent) {
             res.status(500).json({ message: 'Internal Server Error' });
         }
     }
 };
+
+
+// exports.Addjob = async (req, res) => {
+//     try {
+//         const {
+//             CreatedBy, JobTitle, Experience, Location, Qualifications, EmploymentType, Openings, Date, Salary, status, Description, Keyskills,
+//         } = req.body;
+
+//         const newJob = new JOBS({
+//             CreatedBy, JobTitle, Experience, Location, Qualifications, EmploymentType, Openings, Date, Salary, status, Description, Keyskills,
+//         });
+
+//         await newJob.save();
+
+//         // Ensure io is accessible
+//         if (global.io) {
+//             global.io.emit('NEW_JOB', newJob);
+//             console.log('Notification emitted for new job:', newJob);
+//         } else {
+//             console.log('Socket.io instance is not available.');
+//         }
+
+//         res.status(201).json({ message: 'Job added successfully', job: newJob });
+
+//     } catch (error) {
+//         console.log(error);
+//         if (!res.headersSent) {
+//             res.status(500).json({ message: 'Internal Server Error' });
+//         }
+//     }
+// };
 
 
 
@@ -98,7 +110,7 @@ exports.getJobs = async (req, res) => {
 };
 
 
-    
+
 
 // Get All Jobs
 exports.getAllJobs = async (req, res) => {
