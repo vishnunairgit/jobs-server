@@ -20,7 +20,7 @@ const authRouter = require('./routes/authRouter');
 const jobsRouter = require('./routes/jobsRouter'); 
 const userRouter = require('./routes/userRouter');
 const studentRouter = require('./routes/studentRouter');
-// const Notification =require('./routes/notification')
+const notificationRouter =require('./routes/notificationRouter');
 
 const  app = express();
 
@@ -46,7 +46,7 @@ app.use(authRouter);
 app.use(jobsRouter);
 app.use(userRouter);
 app.use(studentRouter);
-// app.use(Notification);
+app.use(notificationRouter);
 
 
 
